@@ -9,6 +9,10 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -25,6 +29,9 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - id: migrate
+        run: ./scripts/migrateup.sh
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
